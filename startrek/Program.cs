@@ -59,6 +59,15 @@ public class starTrek
                         return;
                     }
 
+                case "HLP": {
+                        Console.WriteLine("List of commands: ");
+                        Console.WriteLine("NAV: move to another quadrant, or within the current.");
+                        Console.WriteLine("MAP: pull a map of klingons in the galaxy.");
+                        Console.WriteLine("PHA: shoot some klingons");
+                        Console.WriteLine("EXIT: end the game.");
+                        break;
+                    }
+
                 default:
                     {
                         break;
@@ -79,11 +88,17 @@ public class starTrek
 
     }
 
-    public static void intro() { }
+    public static void intro() {
+        Console.WriteLine("You are fighting klingons. ");
+    }
     public static void displayQuad()
     {
+        Console.WriteLine("*****************************************************************************");
         Console.WriteLine($"You are in quadrant {quadX},{quadY}:");
         Console.WriteLine($"Your shield strength is: {shieldStrength}");
+        Console.WriteLine($"inventory: {inventory}");
+        Console.WriteLine($"moves done: {moveCount}");
+        Console.WriteLine($"number of klingons left: {numKlingons}");
         try
         {
             for (int y = 0; y < 8; y++)
@@ -142,11 +157,11 @@ public class starTrek
                 {
                     //north
                     int tempX = 0;
-                    int tempY = (int)(-10 * warp);
+                    int tempY = (int)(-8 * warp);
                     int xoff = 0;
-                    int yoff = -1 * tempY % 8;
+                    int yoff = tempY % 8;
                     int xquad = 0;
-                    int yquad = -1 * tempY / 8;
+                    int yquad = tempY / 8;
                     quadY += yquad;
                     cellY += yoff;
                     break;
@@ -154,12 +169,12 @@ public class starTrek
             case 1:
                 {
                     //northeast
-                    int tempX = (int)(10 * warp);
-                    int tempY = (int)(-10 * warp);
+                    int tempX = (int)(8 * warp);
+                    int tempY = (int)(-8 * warp);
                     int xoff = 1 * tempX % 8; ;
-                    int yoff = -1 * tempY % 8;
+                    int yoff = 1 * tempY % 8;
                     int xquad = tempX / 8;
-                    int yquad = -1 * tempY / 8;
+                    int yquad = 1 * tempY / 8;
                     quadY += yquad;
                     cellY += yoff;
                     quadX += xquad;
@@ -169,7 +184,7 @@ public class starTrek
             case 2:
                 {
                     //east
-                    int tempX = (int)(10 * warp);
+                    int tempX = (int)(8 * warp);
                     int tempY = 0;
                     int xoff = 1 * tempX % 8; ;
                     int yoff = 0;
@@ -185,8 +200,8 @@ public class starTrek
             case 3:
                 {
                     //southeast
-                    int tempX = (int)(10 * warp);
-                    int tempY = (int)(10 * warp);
+                    int tempX = (int)(8 * warp);
+                    int tempY = (int)(8 * warp);
                     int xoff = 1 * tempX % 8; ;
                     int yoff = 1 * tempY % 8;
                     int xquad = tempX / 8;
@@ -201,7 +216,7 @@ public class starTrek
                 {
                     //south
                     int tempX = 0;
-                    int tempY = (int)(10 * warp);
+                    int tempY = (int)(8 * warp);
                     int xoff = 0; ;
                     int yoff = 1 * tempY % 8;
                     int xquad = 0;
@@ -215,11 +230,11 @@ public class starTrek
             case 5:
                 {
                     //southwest
-                    int tempX = (int)(-10 * warp);
-                    int tempY = (int)(10 * warp);
-                    int xoff = -1 * tempX % 8; ;
+                    int tempX = (int)(-8 * warp);
+                    int tempY = (int)(8 * warp);
+                    int xoff = 1 * tempX % 8; ;
                     int yoff = 1 * tempY % 8;
-                    int xquad = -1 * tempX / 8;
+                    int xquad = 1 * tempX / 8;
                     int yquad = 1 * tempY / 8;
                     quadY += yquad;
                     cellY += yoff;
@@ -231,11 +246,11 @@ public class starTrek
                 {
                     //west
                     int tempY = 0;
-                    int tempX = (int)(-10 * warp);
+                    int tempX = (int)(-8 * warp);
                     int yoff = 0;
-                    int xoff = -1 * tempX % 8;
+                    int xoff = 1 * tempX % 8;
                     int yquad = 0;
-                    int xquad = -1 * tempX / 8;
+                    int xquad = 1 * tempX / 8;
                     quadY += yquad;
                     cellY += yoff;
                     quadX += xquad;
@@ -245,12 +260,12 @@ public class starTrek
             case 7:
                 {
                     //northwest
-                    int tempX = (int)(-10 * warp);
-                    int tempY = (int)(-10 * warp);
-                    int xoff = -1 * tempX % 8; ;
-                    int yoff = -1 * tempY % 8;
-                    int xquad = -1 * tempX / 8;
-                    int yquad = -1 * tempY / 8;
+                    int tempX = (int)(-8 * warp);
+                    int tempY = (int)(-8 * warp);
+                    int xoff = 1 * tempX % 8; ;
+                    int yoff = 1 * tempY % 8;
+                    int xquad = 1 * tempX / 8;
+                    int yquad = 1 * tempY / 8;
                     quadY += yquad;
                     cellY += yoff;
                     quadX += xquad;
@@ -376,7 +391,7 @@ public class starTrek
         int maxPos = 64 * 64;
         int randNum = 0;
         bool isStar = false;
-        numKlingons = rnd.Next(Cell.MAXKLINGONS);
+        numKlingons = Cell.MAXKLINGONS;
         int[] starLocs = new int[numKlingons];
         for (int i = 0; i < numKlingons; i++)
         {
@@ -461,6 +476,7 @@ public class starTrek
             if (grid[x1, y1, x2, y2] == Cell.KLINGON && pha>0 ) {
                 grid[x1, y1, x2, y2] = 0;
                 pha--;
+                numKlingons--;
             }
         }
     }
