@@ -42,16 +42,20 @@ public class starTrek
                     }
 
                 case "PHA": {
-                        Console.WriteLine($"How many phasors do you need? You have {inventory} available: ");
-                        int pha = Int32.Parse(Console.ReadLine());
-
-                        if (inventory >= pha)
+                        if (getKlingonCount(quadX, quadY) > 0)
                         {
-                            inventory -= pha;
-                            killKlingons(pha, quadX, quadY);
-                            shieldStrength -= 100 * pha;
+                            Console.WriteLine($"How many phasors do you need? You have {inventory} available: ");
+                            int pha = Int32.Parse(Console.ReadLine());
+
+                            if (inventory >= pha)
+                            {
+                                inventory -= pha;
+                                killKlingons(pha, quadX, quadY);
+                                shieldStrength -= 100 * pha;
+                            }
+                            else Console.WriteLine("Not enough inventory.");
                         }
-                        else Console.WriteLine("Not enough inventory.");
+                        else Console.WriteLine(" No klingons in the quadrant.");
                         break;
                     }
 
@@ -151,6 +155,7 @@ public class starTrek
         int bearing = Int32.Parse(Console.ReadLine());
         Console.WriteLine("Enter a warp factor<1..8>: ");
         double warp = Double.Parse(Console.ReadLine());
+        bool canWe = true;
         switch (bearing)
         {
             case 0:
@@ -164,6 +169,8 @@ public class starTrek
                     int yquad = tempY / 8;
                     quadY += yquad;
                     cellY += yoff;
+                    if (blockCheck(quadX,quadY,cellX,cellY-1)== Cell.STAR) canWe = false;
+                    else canWe = true;
                     break;
                 }
             case 1:
@@ -179,6 +186,8 @@ public class starTrek
                     cellY += yoff;
                     quadX += xquad;
                     cellX += xoff;
+                    if (blockCheck(quadX, quadY, cellX+1, cellY - 1) == Cell.STAR) canWe = false;
+                    else canWe = true;
                     break;
                 }
             case 2:
@@ -194,6 +203,8 @@ public class starTrek
                     cellY += yoff;
                     quadX += xquad;
                     cellX += xoff;
+                    if (blockCheck(quadX, quadY, cellX+1, cellY) == Cell.STAR) canWe = false;
+                    else canWe = true;
                     break;
                 }
 
@@ -210,6 +221,8 @@ public class starTrek
                     cellY += yoff;
                     quadX += xquad;
                     cellX += xoff;
+                    if (blockCheck(quadX, quadY, cellX+1, cellY + 1) == Cell.STAR) canWe = false;
+                    else canWe = true;
                     break;
                 }
             case 4:
@@ -225,6 +238,8 @@ public class starTrek
                     cellY += yoff;
                     quadX += xquad;
                     cellX += xoff;
+                    if (blockCheck(quadX, quadY, cellX, cellY + 1) == Cell.STAR) canWe = false;
+                    else canWe = true;
                     break;
                 }
             case 5:
@@ -240,6 +255,8 @@ public class starTrek
                     cellY += yoff;
                     quadX += xquad;
                     cellX += xoff;
+                    if (blockCheck(quadX, quadY, cellX-1, cellY + 1) == Cell.STAR) canWe = false;
+                    else canWe = true;
                     break;
                 }
             case 6:
@@ -255,6 +272,8 @@ public class starTrek
                     cellY += yoff;
                     quadX += xquad;
                     cellX += xoff;
+                    if (blockCheck(quadX, quadY, cellX-1, cellY) == Cell.STAR) canWe = false;
+                    else canWe = true;
                     break;
                 }
             case 7:
@@ -270,8 +289,15 @@ public class starTrek
                     cellY += yoff;
                     quadX += xquad;
                     cellX += xoff;
+                    if (blockCheck(quadX, quadY, cellX-1, cellY - 1) == Cell.STAR) canWe = false;
+                    else canWe = true;
                     break;
                 }
+        }
+
+        if (!canWe) {
+            Console.WriteLine("Bad navigation, not moving.");
+            return;
         }
 
         //correct coords if negative
@@ -323,7 +349,7 @@ public class starTrek
     public static void drawMap() {
         for (int y = 0; y < 8; y++) {
             for (int x = 0; x < 8; x++) {
-                int cnt = getKlingonCount(x, y);
+                int cnt = getBaseCount(x, y);
                 if (cnt >= 10) Console.WriteLine($" {cnt}");
                 else Console.Write($"  {cnt}");
             }
@@ -331,10 +357,28 @@ public class starTrek
         }
     }
 
-    public static int getKlingonCount(int x, int y) {
+    public static int getBaseCount(int x, int y) {
         int start = (y * 8 + x) * 64;
         int cnt = 0;
         for (int pos = start; pos < start + 64; pos++) {
+            int[] parsed = parseGrid(pos);
+            int x1 = parsed[0];
+            int y1 = parsed[1];
+            int x2 = parsed[2];
+            int y2 = parsed[3];
+            if (grid[x1, y1, x2, y2] == Cell.BASE) cnt++;
+        }
+
+        return cnt;
+    }
+
+    //get klingon count in quadrant
+    public static int getKlingonCount(int x, int y)
+    {
+        int start = (y * 8 + x) * 64;
+        int cnt = 0;
+        for (int pos = start; pos < start + 64; pos++)
+        {
             int[] parsed = parseGrid(pos);
             int x1 = parsed[0];
             int y1 = parsed[1];
@@ -345,7 +389,6 @@ public class starTrek
 
         return cnt;
     }
-
     public static bool exists(int num, int[] array)
     {
         for (int i = 0; i < array.Length; i++)
@@ -422,7 +465,7 @@ public class starTrek
         int maxPos = 64 * 64;
         int randNum = 0;
         bool isStar = false;
-        int numKlingons = rnd.Next(Cell.MAXBASES);
+        int numKlingons = Cell.MAXBASES;
         int[] starLocs = new int[numKlingons];
         for (int i = 0; i < numKlingons; i++)
         {
@@ -492,5 +535,36 @@ public class starTrek
             int y2 = parsed[3];
             if (grid[x1, y1, x2, y2] == Cell.SHIP) grid[x1, y1, x2, y2] = 0;
         }
+    }
+
+    //check for a star blockage
+    public static int blockCheck(int quadX, int quadY, int cellX, int cellY) {
+        if (cellX < 0) {
+            cellX = 7 - cellX;
+            quadX--;
+        }
+        if (cellX > 7)
+        {
+            cellX -=7;
+            quadX++;
+        }
+        if (cellY < 0)
+        {
+            cellY = 7 - cellY;
+            quadX--;
+        }
+        if (cellY > 7)
+        {
+            cellY -= 7;
+            quadX++;
+        }
+        if (quadX < 0 || quadX > 7 || quadY < 0 || quadY > 7)
+        {
+            return -1;
+        }
+        else {
+            if (grid[quadX, quadY, cellX, cellY] == Cell.STAR) return Cell.STAR;
+        }
+        return 0;
     }
 }
