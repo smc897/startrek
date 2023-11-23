@@ -13,3 +13,8 @@ C:\Users\scott\source\repos\startrek\startrek\obj\Debug\net6.0\refint\startrek.d
 C:\Users\scott\source\repos\startrek\startrek\obj\Debug\net6.0\startrek.pdb
 C:\Users\scott\source\repos\startrek\startrek\obj\Debug\net6.0\startrek.genruntimeconfig.cache
 C:\Users\scott\source\repos\startrek\startrek\obj\Debug\net6.0\ref\startrek.dll
+C:\Users\scott\source\repos\startrek\startrek\bin\Debug\net6.0\System.Windows.Extensions.dll
+C:\Users\scott\source\repos\startrek\startrek\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
+C:\Users\scott\source\repos\startrek\startrek\obj\Debug\net6.0\startrek.csproj.CopyComplete
+C:\Users\scott\source\repos\startrek\startrek\obj\Debug\net6.0\startrek.Properties.Resources.resources
+C:\Users\scott\source\repos\startrek\startrek\obj\Debug\net6.0\startrek.csproj.GenerateResource.cache

@@ -17,6 +17,7 @@ public class starTrek
     static int energy = 5000;
     public static void Main(String[] args)
     {
+        System.Media.SoundPlayer player = new System.Media.SoundPlayer("mi_explosion_03_hpx.wav");
         bool shipDead = false;
         populateGrid();
         //Console.WriteLine("grid is populated.");
@@ -54,6 +55,7 @@ public class starTrek
                             {
                                 inventory -= pha;
                                 killKlingons(pha, quadX, quadY);
+                                player.Play();
                                 shieldStrength -= 100 * pha;
                             }
                             else Console.WriteLine("Not enough inventory.");

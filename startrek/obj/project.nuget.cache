@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "QyXb9YCTrViAZBGIbwffKgOieqsYihHgC7SRTy7Jn+H9MB5W1Le5DxMcc9IWu8a31Z38eJQSn0Z22gybOIUOGg==",
+  "dgSpecHash": "rvQX626pZ0L/gW3sr2rRUJw504gdlxf9Oq9TCb2x/7zorkZW2lpSxZOiHeQhXRT/9exTSAD6TYIGCGDS9zAMsw==",
   "success": true,
   "projectFilePath": "C:\\Users\\scott\\source\\repos\\startrek\\startrek\\startrek.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\scott\\.nuget\\packages\\system.windows.extensions\\8.0.0\\system.windows.extensions.8.0.0.nupkg.sha512"
+  ],
   "logs": []
 }
