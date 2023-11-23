@@ -14,6 +14,7 @@ public class starTrek
     static int inventory = 1000;
     static int moveCount = 0;
     static int numKlingons = 0;
+    static int energy = 5000;
     public static void Main(String[] args)
     {
         bool shipDead = false;
@@ -28,11 +29,13 @@ public class starTrek
         {
             displayQuad();
             String choice = getCommand();
+            choice = choice.ToUpper();
             switch (choice)
             {
                 case "NAV":
                     {
                         nav();
+                        energy -= 20;
                         break;
                     }
                 case "MAP":
@@ -59,6 +62,20 @@ public class starTrek
                         break;
                     }
 
+                case "SHI": {
+                        Console.WriteLine("Time to replenish your shields. How much energy do you need?");
+                        int newEnergy = Int32.Parse(Console.ReadLine());
+                        if (newEnergy > energy) Console.WriteLine("You don't have enough energy available.");
+                        else {
+                            energy -= newEnergy;
+                            shieldStrength += newEnergy;
+                            Console.WriteLine("energy transferred to shields.");
+                        }
+                        
+                        
+                        break;
+                    }
+
                 case "EXIT": {
                         return;
                     }
@@ -68,6 +85,7 @@ public class starTrek
                         Console.WriteLine("NAV: move to another quadrant, or within the current.");
                         Console.WriteLine("MAP: pull a map of klingons in the galaxy.");
                         Console.WriteLine("PHA: shoot some klingons");
+                        Console.WriteLine("SHI: replenish shields from energy bank.");
                         Console.WriteLine("EXIT: end the game.");
                         break;
                     }
@@ -103,6 +121,7 @@ public class starTrek
         Console.WriteLine($"inventory: {inventory}");
         Console.WriteLine($"moves done: {moveCount}");
         Console.WriteLine($"number of klingons left: {numKlingons}");
+        Console.WriteLine($"energy: {energy}");
         try
         {
             for (int y = 0; y < 8; y++)
@@ -151,201 +170,216 @@ public class starTrek
     }
     public static void nav()
     {
-        Console.WriteLine("Enter a bearing <0..7>:");
-        int bearing = Int32.Parse(Console.ReadLine());
-        Console.WriteLine("Enter a warp factor<1..8>: ");
-        double warp = Double.Parse(Console.ReadLine());
-        bool canWe = true;
-        switch (bearing)
+        try
         {
-            case 0:
-                {
-                    //north
-                    int tempX = 0;
-                    int tempY = (int)(-8 * warp);
-                    int xoff = 0;
-                    int yoff = tempY % 8;
-                    int xquad = 0;
-                    int yquad = tempY / 8;
-                    quadY += yquad;
-                    cellY += yoff;
-                    if (blockCheck(quadX,quadY,cellX,cellY-1)== Cell.STAR) canWe = false;
-                    else canWe = true;
-                    break;
-                }
-            case 1:
-                {
-                    //northeast
-                    int tempX = (int)(8 * warp);
-                    int tempY = (int)(-8 * warp);
-                    int xoff = 1 * tempX % 8; ;
-                    int yoff = 1 * tempY % 8;
-                    int xquad = tempX / 8;
-                    int yquad = 1 * tempY / 8;
-                    quadY += yquad;
-                    cellY += yoff;
-                    quadX += xquad;
-                    cellX += xoff;
-                    if (blockCheck(quadX, quadY, cellX+1, cellY - 1) == Cell.STAR) canWe = false;
-                    else canWe = true;
-                    break;
-                }
-            case 2:
-                {
-                    //east
-                    int tempX = (int)(8 * warp);
-                    int tempY = 0;
-                    int xoff = 1 * tempX % 8; ;
-                    int yoff = 0;
-                    int xquad = tempX / 8;
-                    int yquad = 0;
-                    quadY += yquad;
-                    cellY += yoff;
-                    quadX += xquad;
-                    cellX += xoff;
-                    if (blockCheck(quadX, quadY, cellX+1, cellY) == Cell.STAR) canWe = false;
-                    else canWe = true;
-                    break;
-                }
-
-            case 3:
-                {
-                    //southeast
-                    int tempX = (int)(8 * warp);
-                    int tempY = (int)(8 * warp);
-                    int xoff = 1 * tempX % 8; ;
-                    int yoff = 1 * tempY % 8;
-                    int xquad = tempX / 8;
-                    int yquad = 1 * tempY / 8;
-                    quadY += yquad;
-                    cellY += yoff;
-                    quadX += xquad;
-                    cellX += xoff;
-                    if (blockCheck(quadX, quadY, cellX+1, cellY + 1) == Cell.STAR) canWe = false;
-                    else canWe = true;
-                    break;
-                }
-            case 4:
-                {
-                    //south
-                    int tempX = 0;
-                    int tempY = (int)(8 * warp);
-                    int xoff = 0; ;
-                    int yoff = 1 * tempY % 8;
-                    int xquad = 0;
-                    int yquad = 1 * tempY / 8;
-                    quadY += yquad;
-                    cellY += yoff;
-                    quadX += xquad;
-                    cellX += xoff;
-                    if (blockCheck(quadX, quadY, cellX, cellY + 1) == Cell.STAR) canWe = false;
-                    else canWe = true;
-                    break;
-                }
-            case 5:
-                {
-                    //southwest
-                    int tempX = (int)(-8 * warp);
-                    int tempY = (int)(8 * warp);
-                    int xoff = 1 * tempX % 8; ;
-                    int yoff = 1 * tempY % 8;
-                    int xquad = 1 * tempX / 8;
-                    int yquad = 1 * tempY / 8;
-                    quadY += yquad;
-                    cellY += yoff;
-                    quadX += xquad;
-                    cellX += xoff;
-                    if (blockCheck(quadX, quadY, cellX-1, cellY + 1) == Cell.STAR) canWe = false;
-                    else canWe = true;
-                    break;
-                }
-            case 6:
-                {
-                    //west
-                    int tempY = 0;
-                    int tempX = (int)(-8 * warp);
-                    int yoff = 0;
-                    int xoff = 1 * tempX % 8;
-                    int yquad = 0;
-                    int xquad = 1 * tempX / 8;
-                    quadY += yquad;
-                    cellY += yoff;
-                    quadX += xquad;
-                    cellX += xoff;
-                    if (blockCheck(quadX, quadY, cellX-1, cellY) == Cell.STAR) canWe = false;
-                    else canWe = true;
-                    break;
-                }
-            case 7:
-                {
-                    //northwest
-                    int tempX = (int)(-8 * warp);
-                    int tempY = (int)(-8 * warp);
-                    int xoff = 1 * tempX % 8; ;
-                    int yoff = 1 * tempY % 8;
-                    int xquad = 1 * tempX / 8;
-                    int yquad = 1 * tempY / 8;
-                    quadY += yquad;
-                    cellY += yoff;
-                    quadX += xquad;
-                    cellX += xoff;
-                    if (blockCheck(quadX, quadY, cellX-1, cellY - 1) == Cell.STAR) canWe = false;
-                    else canWe = true;
-                    break;
-                }
-        }
-
-        if (!canWe) {
-            Console.WriteLine("Bad navigation, not moving.");
-            return;
-        }
-
-        //correct coords if negative
-        if (cellX < 0) {
-            cellX = 7 - cellX;
-            quadX--;
-        }
-        if (cellY < 0) {
-            cellY = 7 - cellY;
-            quadY--;
-        }
-        if (cellX >7)
-        {
-            cellX -=7;
-            quadX++;
-        }
-        if (cellY >7)
-        {
-            cellY -=7;
-            quadY++;
-        }
-
-        if (quadX >= 0 && quadX < 8 && quadY >= 0 && quadY < 8)
-        {
-            if (grid[quadX, quadY, cellX, cellY] != Cell.KLINGON)
+            Console.WriteLine("Enter a bearing <0..7>:");
+            int bearing = Int32.Parse(Console.ReadLine());
+            Console.WriteLine("Enter a warp factor<1..8>: ");
+            double warp = Double.Parse(Console.ReadLine());
+            bool canWe = true;
+            switch (bearing)
             {
-                if (grid[quadX, quadY, cellX, cellY] == Cell.BASE)
+                case 0:
+                    {
+                        //north
+                        int tempX = 0;
+                        int tempY = (int)(-8 * warp);
+                        int xoff = 0;
+                        int yoff = tempY % 8;
+                        int xquad = 0;
+                        int yquad = tempY / 8;
+
+                        if (blockCheck(quadX, quadY, cellX, cellY - 1) == Cell.STAR) canWe = false;
+                        else canWe = true;
+                        quadY += yquad;
+                        cellY += yoff;
+                        break;
+                    }
+                case 1:
+                    {
+                        //northeast
+                        int tempX = (int)(8 * warp);
+                        int tempY = (int)(-8 * warp);
+                        int xoff = 1 * tempX % 8; ;
+                        int yoff = 1 * tempY % 8;
+                        int xquad = tempX / 8;
+                        int yquad = 1 * tempY / 8;
+
+                        if (blockCheck(quadX, quadY, cellX + 1, cellY - 1) == Cell.STAR) canWe = false;
+                        else canWe = true;
+                        quadY += yquad;
+                        cellY += yoff;
+                        quadX += xquad;
+                        cellX += xoff;
+                        break;
+                    }
+                case 2:
+                    {
+                        //east
+                        int tempX = (int)(8 * warp);
+                        int tempY = 0;
+                        int xoff = 1 * tempX % 8; ;
+                        int yoff = 0;
+                        int xquad = tempX / 8;
+                        int yquad = 0;
+
+                        if (blockCheck(quadX, quadY, cellX + 1, cellY) == Cell.STAR) canWe = false;
+                        else canWe = true;
+                        quadY += yquad;
+                        cellY += yoff;
+                        quadX += xquad;
+                        cellX += xoff;
+                        break;
+                    }
+
+                case 3:
+                    {
+                        //southeast
+                        int tempX = (int)(8 * warp);
+                        int tempY = (int)(8 * warp);
+                        int xoff = 1 * tempX % 8; ;
+                        int yoff = 1 * tempY % 8;
+                        int xquad = tempX / 8;
+                        int yquad = 1 * tempY / 8;
+
+                        if (blockCheck(quadX, quadY, cellX + 1, cellY + 1) == Cell.STAR) canWe = false;
+                        else canWe = true;
+                        quadY += yquad;
+                        cellY += yoff;
+                        quadX += xquad;
+                        cellX += xoff;
+                        break;
+                    }
+                case 4:
+                    {
+                        //south
+                        int tempX = 0;
+                        int tempY = (int)(8 * warp);
+                        int xoff = 0; ;
+                        int yoff = 1 * tempY % 8;
+                        int xquad = 0;
+                        int yquad = 1 * tempY / 8;
+
+                        if (blockCheck(quadX, quadY, cellX, cellY + 1) == Cell.STAR) canWe = false;
+                        else canWe = true;
+                        quadY += yquad;
+                        cellY += yoff;
+                        quadX += xquad;
+                        cellX += xoff;
+                        break;
+                    }
+                case 5:
+                    {
+                        //southwest
+                        int tempX = (int)(-8 * warp);
+                        int tempY = (int)(8 * warp);
+                        int xoff = 1 * tempX % 8; ;
+                        int yoff = 1 * tempY % 8;
+                        int xquad = 1 * tempX / 8;
+                        int yquad = 1 * tempY / 8;
+
+                        if (blockCheck(quadX, quadY, cellX - 1, cellY + 1) == Cell.STAR) canWe = false;
+                        else canWe = true;
+                        quadY += yquad;
+                        cellY += yoff;
+                        quadX += xquad;
+                        cellX += xoff;
+                        break;
+                    }
+                case 6:
+                    {
+                        //west
+                        int tempY = 0;
+                        int tempX = (int)(-8 * warp);
+                        int yoff = 0;
+                        int xoff = 1 * tempX % 8;
+                        int yquad = 0;
+                        int xquad = 1 * tempX / 8;
+
+                        if (blockCheck(quadX, quadY, cellX - 1, cellY) == Cell.STAR) canWe = false;
+                        else canWe = true;
+                        quadY += yquad;
+                        cellY += yoff;
+                        quadX += xquad;
+                        cellX += xoff;
+                        break;
+                    }
+                case 7:
+                    {
+                        //northwest
+                        int tempX = (int)(-8 * warp);
+                        int tempY = (int)(-8 * warp);
+                        int xoff = 1 * tempX % 8; ;
+                        int yoff = 1 * tempY % 8;
+                        int xquad = 1 * tempX / 8;
+                        int yquad = 1 * tempY / 8;
+
+                        if (blockCheck(quadX, quadY, cellX - 1, cellY - 1) == Cell.STAR) canWe = false;
+                        else canWe = true;
+                        quadY += yquad;
+                        cellY += yoff;
+                        quadX += xquad;
+                        cellX += xoff;
+                        break;
+                    }
+            }
+
+            if (!canWe)
+            {
+                Console.WriteLine("Bad navigation, not moving.");
+                return;
+            }
+
+            //correct coords if negative
+            if (cellX < 0)
+            {
+                cellX = 7 - cellX;
+                quadX--;
+            }
+            if (cellY < 0)
+            {
+                cellY = 7 - cellY;
+                quadY--;
+            }
+            if (cellX > 7)
+            {
+                cellX -= 7;
+                quadX++;
+            }
+            if (cellY > 7)
+            {
+                cellY -= 7;
+                quadY++;
+            }
+
+            if (quadX >= 0 && quadX < 8 && quadY >= 0 && quadY < 8)
+            {
+                if (grid[quadX, quadY, cellX, cellY] != Cell.KLINGON)
                 {
-                    Console.WriteLine("You have stumbled on a base. How many phasors do you need?");
-                    int p = Int32.Parse(Console.ReadLine());
-                    inventory += p;
-                    Console.WriteLine("Inventory added.");
+                    if (grid[quadX, quadY, cellX, cellY] == Cell.BASE)
+                    {
+                        Console.WriteLine("You have stumbled on a base. How many phasors do you need?");
+                        int p = Int32.Parse(Console.ReadLine());
+                        inventory += p;
+                        Console.WriteLine("Inventory added.");
+                    }
+                    else
+                    {
+                        deleteShip();
+                        grid[quadX, quadY, cellX, cellY] = Cell.SHIP;
+                    }
                 }
                 else
                 {
-                    deleteShip();
-                    grid[quadX, quadY, cellX, cellY] = Cell.SHIP;
+                    numKlingons--;
+                    shieldStrength -= 100;
+                    Console.WriteLine($"You have killed 1 klingon. Your shield strength is: {shieldStrength}");
                 }
             }
-            else
-            {
-                numKlingons--;
-                shieldStrength -= 100;
-                Console.WriteLine($"You have killed 1 klingon. Your shield strength is: {shieldStrength}");
-            }
+            else Console.WriteLine("could not navigate to uncharted territory.");
         }
-        else Console.WriteLine("could not navigate to uncharted territory.");
-    }
+        catch (Exception e) { Console.WriteLine("exception in navigation, try again."); }
+        }
     public static void drawMap() {
         for (int y = 0; y < 8; y++) {
             for (int x = 0; x < 8; x++) {
@@ -540,22 +574,22 @@ public class starTrek
     //check for a star blockage
     public static int blockCheck(int quadX, int quadY, int cellX, int cellY) {
         if (cellX < 0) {
-            cellX = 7 - cellX;
+            cellX+=8;
             quadX--;
         }
         if (cellX > 7)
         {
-            cellX -=7;
+            cellX -=8;
             quadX++;
         }
         if (cellY < 0)
         {
-            cellY = 7 - cellY;
+            cellY+=8;
             quadX--;
         }
         if (cellY > 7)
         {
-            cellY -= 7;
+            cellY -= 8;
             quadX++;
         }
         if (quadX < 0 || quadX > 7 || quadY < 0 || quadY > 7)
