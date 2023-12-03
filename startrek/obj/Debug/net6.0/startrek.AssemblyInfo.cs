@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("startrek")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+87d9a43575bfc649c6a4725b79dfd37c58c9eca4")]
 [assembly: System.Reflection.AssemblyProductAttribute("startrek")]
 [assembly: System.Reflection.AssemblyTitleAttribute("startrek")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

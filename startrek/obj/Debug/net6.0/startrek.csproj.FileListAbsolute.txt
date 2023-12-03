@@ -18,3 +18,4 @@ C:\Users\scott\source\repos\startrek\startrek\bin\Debug\net6.0\runtimes\win\lib\
 C:\Users\scott\source\repos\startrek\startrek\obj\Debug\net6.0\startrek.csproj.CopyComplete
 C:\Users\scott\source\repos\startrek\startrek\obj\Debug\net6.0\startrek.Properties.Resources.resources
 C:\Users\scott\source\repos\startrek\startrek\obj\Debug\net6.0\startrek.csproj.GenerateResource.cache
+C:\Users\scott\source\repos\startrek\startrek\obj\Debug\net6.0\startrek.sourcelink.json

@@ -98,6 +98,12 @@ public class starTrek
                     }
             }
 
+            //game over if shield strength <0
+            if (shieldStrength < 0) {
+                Console.WriteLine("Your shield strength is gone. Game over!!!");
+                return;
+            }
+
             moveCount++;
             if (moveCount == Cell.MAXMOVES && numKlingons > 0)
             {
@@ -364,6 +370,7 @@ public class starTrek
                         int p = Int32.Parse(Console.ReadLine());
                         inventory += p;
                         Console.WriteLine("Inventory added.");
+                        deleteShip();
                     }
                     else
                     {
